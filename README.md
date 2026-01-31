@@ -6,3 +6,24 @@ Team Members:
 -  Abdullah Orakzai
 -  Dipita Sinha
 -  Elias Youssef
+
+
+to setup dev environment (run only once)
+
+1- git clone repo
+   cd repo
+
+2- cd backend 
+   npm install
+   cd .. 
+   cd frontend
+   npm install
+
+
+to start dev env
+
+1- cd frontend
+   npm start
+
+2- cd backend 
+   npm run dev
