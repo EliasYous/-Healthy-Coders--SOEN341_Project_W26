@@ -46,6 +46,9 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <div className='Recipe of the week'>
+            
+        </div>
       </div>
     </div>
   );

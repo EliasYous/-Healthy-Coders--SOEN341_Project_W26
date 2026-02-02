@@ -8,7 +8,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Update user state when route changes or auth changes
   useEffect(() => {
     setUser(getUser());
     
