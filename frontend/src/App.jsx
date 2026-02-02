@@ -1,13 +1,16 @@
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
 import './App.css'
 
 function App() {
-
-
   return (
     <BrowserRouter>
-      <h1>Healthy Coders</h1>
+      <div className="App">
+        <Navbar />
+        <Home />
+      </div>
     </BrowserRouter>
   )
 }

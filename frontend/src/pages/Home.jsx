@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { isAuthenticated } from '../utils/auth';
 import './Home.css';
 
 const Home = () => {
@@ -16,7 +15,7 @@ const Home = () => {
           <p className="subtitle">
             Plan your meals, track groceries, and discover easy recipes tailored for students
           </p>
-          {!isAuthenticated() && (
+          {(
             <div className="hero-actions">
               <Link to="/register" className="btn btn-primary">
                 Register
@@ -46,8 +45,12 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div className='Recipe of the week'>
-            
+      </div>
+      <div className="features">
+        <h2>Recipe of the Week</h2>
+        <div className="feature-card">
+          <h3>Spaghetti Aglio e Olio</h3>
+          <p>A simple and quick pasta dish made with garlic, olive oil, and chili flakes.</p>
         </div>
       </div>
     </div>
