@@ -2,6 +2,24 @@ const pool = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 const User = {
+// Find user by email
+  findByEmail: async (email) => {
+    const result = await pool.query(
+      'SELECT id, email, password_hash, first_name, last_name FROM users WHERE email = $1',
+      [email]
+    );
+    return result.rows[0] || null;
+  },
+
+  // Find user by ID
+  findById: async (id) => {
+    const result = await pool.query(
+      'SELECT id, email, first_name, last_name, created_at FROM users WHERE id = $1',
+      [id]
+    );
+    return result.rows[0] || null;
+  },
+
   // Check if user exists by email
   existsByEmail: async (email) => {
     const result = await pool.query(
@@ -24,6 +42,11 @@ const User = {
   hashPassword: async (password) => {
     const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
+  },
+
+    // Verify password
+  verifyPassword: async (password, hash) => {
+    return await bcrypt.compare(password, hash);
   },
 
   // Transform database row to camelCase format
