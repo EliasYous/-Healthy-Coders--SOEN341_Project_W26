@@ -18,7 +18,7 @@ const Home = () => {
           {(
             <div className="hero-actions">
               <Link to="/register" className="btn btn-primary">
-                Register
+                Get started
               </Link>
               <Link to="/login" className="btn btn-secondary">
                 Login
@@ -49,7 +49,7 @@ const Home = () => {
       <div className="features">
         <h2>Recipe of the Week</h2>
         <div className="feature-card">
-          <h3>Spaghetti Aglio e Olio</h3>
+          <h3>Spaghetti</h3>
           <p>A simple and quick pasta dish made with garlic, olive oil, and chili flakes.</p>
         </div>
       </div>
