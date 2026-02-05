@@ -9,6 +9,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    setUser(null);
     navigate('/home'); //redirect to home after logout
     window.dispatchEvent(new Event('auth-change')); //notify nav bar to change
   }
@@ -21,6 +22,8 @@ const Navbar = () => {
     window.addEventListener('auth-change', handleAuthChange); 
     return () => window.removeEventListener('auth-change', handleAuthChange);
   }, []);
+
+  let authLinks;
 
   if (isAuthenticated()) { //if logged in, display profile and logout, else display login and register
     authLinks = (

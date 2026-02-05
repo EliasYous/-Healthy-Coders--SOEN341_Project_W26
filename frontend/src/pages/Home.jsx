@@ -1,8 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { isAuthenticated } from '../utils/auth';
 import './Home.css';
 
+
 const Home = () => {
+
+    let authLinks;
+  
+    if (!isAuthenticated()) { //if not logged in, display login and register, else display planner button
+  authLinks = (
+    <>
+      <Link to="/login" className="btn btn-primary">
+        Login
+      </Link>
+      <Link to="/register" className="btn btn-secondary">
+        Get Started
+      </Link>
+    </>
+  );
+}
+else {
+  authLinks = ( // use profile link as placeholder
+    <>
+      <Link to="/profile" className="btn btn-primary"> 
+        Go to Planner
+      </Link>
+    </>
+  );
+}
 
   return (
     <div className="home">
@@ -17,12 +43,7 @@ const Home = () => {
           </p>
           {(
             <div className="hero-actions">
-              <Link to="/register" className="btn btn-primary">
-                Get started
-              </Link>
-              <Link to="/login" className="btn btn-secondary">
-                Login
-              </Link>
+              {authLinks}
             </div>
           )}
         </div>
@@ -50,7 +71,7 @@ const Home = () => {
         <h2>Recipe of the Week</h2>
         <div className="feature-card">
           <h3>Spaghetti</h3>
-          <p>A simple and quick pasta dish made with garlic, olive oil, and chili flakes.</p>
+          <p>A simple and quick pasta dish made with garlic, olive oil, and chili flakes. include picture</p>
         </div>
       </div>
     </div>
