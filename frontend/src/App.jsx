@@ -1,22 +1,24 @@
+import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import React from 'react';
 import './App.css'
 import Register from './pages/Register';
 import Login from './pages/Login';
 
 function App() {
+  const [showRegister, setShowRegister] = useState(false);
+
   return (
-    <div>
-      <h1>Testing</h1>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <div>
+        <div style={{ padding: '20px' }}>
+          <button onClick={() => setShowRegister(false)}>Login</button>
+          <button onClick={() => setShowRegister(true)}>Register</button>
+        </div>
+        
+        {showRegister ? <Register /> : <Login />}
+      </div>
+    </BrowserRouter>
   )
 }
 
-export default App
+export default App;
