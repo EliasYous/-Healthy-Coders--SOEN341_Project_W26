@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../utils/auth';
+import './Login.css';
 
 // useState hook is used to remember and display the form data, errors, and loading state
 const Login = () => {
@@ -29,7 +30,7 @@ const Login = () => {
 
   // renders the login page
   return (
-    <div className="container" style={{ maxWidth: '500px', marginTop: '50px' }}>
+    <div className="container" style={{ maxWidth: '600px', marginTop: '50px' }}>
       <div className="card">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>

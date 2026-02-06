@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { register } from '../utils/auth';
+import './Register.css';
 
 // useState hook is used to remember and display the form data, errors, and loading state
 const Register = () => {
@@ -37,7 +38,7 @@ const Register = () => {
       return 'Password must contain at least one number';
     }
     if (!/[!@#$%^&*(),.?"':;~`{}|<>]/.test(password)) {
-      return 'Password must contain at least one special character (e.g. !, @, #, $, % etc.)';
+      return 'Password must contain at least one special character\n(e.g. !, @, #, $, % etc.)';
     }
     return null;
   };
@@ -75,7 +76,7 @@ const Register = () => {
 
   // renders the register page
   return (
-    <div className="container" style={{ maxWidth: '500px', marginTop: '50px' }}>
+    <div className="container" style={{ maxWidth: '600px', marginTop: '50px' }}>
       <div className="card">
         <h2>Create Account</h2>
         {/* form to submit the form data to the backend */}
@@ -124,7 +125,7 @@ const Register = () => {
               required
             />
             <small style={{ fontSize: '0.85em', color: '#666', display: 'block', marginTop: '5px' }}>
-              Must be 6+ characters with at least one uppercase, lowercase, number, and special character
+              NOTE: Password must be 6+ characters with at least one uppercase, lowercase, number, and special character
             </small>
           </div>
           {error && <div className="error-message">{error}</div>}
