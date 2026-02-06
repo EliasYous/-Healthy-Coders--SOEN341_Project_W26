@@ -10,7 +10,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     setUser(null);
-    navigate('/home'); //redirect to home after logout
+    navigate('/'); //redirect to landing page after logout
     window.dispatchEvent(new Event('auth-change')); //notify nav bar to change
   }
 
