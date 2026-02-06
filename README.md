@@ -1,29 +1,33 @@
 # -Healthy-Coders--SOEN341_Project_W26
-MealMajor is a web app for students to plan meals, track groceries, and propose easy recipes.
+MealMajor is a web application designed to help students plan meals efficiently. By managing their dietary preferences and allergies, MealMajor allows busy students to track their groceries and receive simple recipe suggestions. The application aims to promote healthier eating habits while simplifying meal planning.
+
 Team Members:
-- Brian Duong
-- Juan Holguin Corpas
--  Abdullah Orakzai
--  Dipita Sinha
--  Elias Youssef
+- Brian Duong: Frontend development
+- Juan Holguin Corpas: Backend development
+-  Abdullah Orakzai: Backend development
+-  Dipita Sinha: Frontend development
+-  Elias Youssef: Project coordination and Backend development
 
+Development Environment Setup (run once)
 
-to setup dev environment (run only once)
-
-1- git clone repo
+1) Clone the repository:
+   git clone repo
    cd repo
 
-2- cd backend 
+2) Install dependencies:
+   cd backend 
    npm install
    cd .. 
    cd frontend
    npm install
 
 
-to start dev env
+Running the Development Environment
 
-1- cd frontend
+1- Start frontend:
+   cd frontend
    npm start
 
-2- cd backend 
+2- Start backend:
+   cd backend 
    npm run dev
