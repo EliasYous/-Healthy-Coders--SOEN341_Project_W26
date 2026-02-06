@@ -12,6 +12,9 @@ const Profile = () => {
 
   });
 
+    const [message, setMessage] = React.useState('');
+
+
   React.useEffect(() => {
     fetchProfile();
   }, []);
