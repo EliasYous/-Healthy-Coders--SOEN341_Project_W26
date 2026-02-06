@@ -24,10 +24,10 @@ Development Environment Setup (run once)
 
 Running the Development Environment
 
-1- Start frontend:
+1) Start frontend:
    cd frontend
    npm start
 
-2- Start backend:
+2) Start backend:
    cd backend 
    npm run dev
