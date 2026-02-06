@@ -12,4 +12,10 @@ router.post('/register', [
   body('lastName').trim().notEmpty().withMessage('Last name is required'),
 ], authController.register);
 
+// Login user
+router.post('/login', [
+  body('email').isEmail().normalizeEmail(),
+  body('password').notEmpty().withMessage('Password is required'),
+], authController.login);
+
 module.exports = router;
