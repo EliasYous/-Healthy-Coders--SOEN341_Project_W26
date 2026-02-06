@@ -1,14 +1,16 @@
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import './App.css'
+import Register from './pages/Register';
 
 function App() {
-
-
   return (
-    <BrowserRouter>
-      <h1>Healthy Coders</h1>
-    </BrowserRouter>
+    <div>
+      <h1>Testing</h1>
+      <BrowserRouter>
+        <Register />
+      </BrowserRouter>
+    </div>
   )
 }
 
