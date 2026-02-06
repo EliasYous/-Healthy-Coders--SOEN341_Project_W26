@@ -22,12 +22,40 @@ const Register = () => {
     });
   };
 
+  // validates password so that it contains at least one uppercase letter, one lowercase letter, one number, and one special character
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    if (!/[a-z]/.test(password)) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!/[0-9]/.test(password)) {
+      return 'Password must contain at least one number';
+    }
+    if (!/[!@#$%^&*(),.?"':;~`{}|<>]/.test(password)) {
+      return 'Password must contain at least one special character (e.g. !, @, #, $, % etc.)';
+    }
+    return null;
+  };
+
   // handles the form submission
   // async function to wait for the response from the backend without blocking the main thread
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Checks if the password is valid
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setError(passwordError);
+      setLoading(false);
+      return;
+    }
 
     const result = await register(
       formData.email,
@@ -94,8 +122,10 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="6"
             />
+            <small style={{ fontSize: '0.85em', color: '#666', display: 'block', marginTop: '5px' }}>
+              Must be 6+ characters with at least one uppercase, lowercase, number, and special character
+            </small>
           </div>
           {error && <div className="error-message">{error}</div>}
           {/* button to submit the form data to the backend */}
