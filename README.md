@@ -3,7 +3,7 @@ MealMajor is a web application designed to help students plan meals efficiently.
 
 Team Members:
 - Brian Duong (ID: ): Frontend development
-- Juan Holguin Corpas (ID: ): Backend development
+- Juan Holguin Corpas (ID: 40319201): Backend development
 - Abdullah Orakzai (ID: ): Backend development
 - Dipita Sinha (ID: 40273009): Frontend development
 - Elias Youssef (ID: ): Project coordination and Backend development
