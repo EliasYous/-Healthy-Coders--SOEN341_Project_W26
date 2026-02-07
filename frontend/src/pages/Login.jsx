@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../utils/auth';
-import './Login.css';
 
-// useState hook is used to remember and display the form data, errors, and loading state
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,13 +9,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // handles the form submission without blocking the main thread
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    const result = await login(email, password); // await waits for the response from the backend without blocking
+    const result = await login(email, password);
 
     if (result.success) {
       navigate('/profile');
@@ -28,9 +25,8 @@ const Login = () => {
     setLoading(false);
   };
 
-  // renders the login page
   return (
-    <div className="container" style={{ maxWidth: '600px', marginTop: '50px' }}>
+    <div className="container" style={{ maxWidth: '500px', marginTop: '50px' }}>
       <div className="card">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>

@@ -1,77 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Profile.css';
 
 const Profile = () => {
-  const [profile, setProfile] = React.useState({
+  const [profile, setProfile] = useState({
+    dietPreferences: [],
+    allergies: [],
     firstName: '',
     lastName: '',
     email: '',
-    dietPreferences: [],
-    allergies: [],
-
   });
-
-    const [message, setMessage] = React.useState('');
-
-
-  React.useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const response = await axios.get('/api/profile');
-      setProfile(response.data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-    }
-  };
-
-  const updateProfile = async (updates) => {
-    try {
-      const response = await axios.put('/api/profile', updates);
-      setProfile(response.data);
-      setMessage('Profile updated successfully');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      setMessage('Error updating profile');
-      setTimeout(() => setMessage(''), 3000);
-    }
-  };
-
-    const handleRemoveDietPreference = (preference) => {
-        //create new array without the removed preference
-    const updated = profile.dietPreferences.filter((p) => p !== preference); 
-    updateProfile({ dietPreferences: updated });
-  };
-
-  const handleRemoveAllergy = (allergy) => {
-    const updated = profile.allergies.filter((a) => a !== allergy);
-    updateProfile({ allergies: updated });
-  };
-
-  const handleQuickAddDiet = (preference) => {
-    if (!profile.dietPreferences.includes(preference)) {
-      const updated = [...profile.dietPreferences, preference]; //copy existing preferences and add new one
-      updateProfile({ dietPreferences: updated });
-    }
-  };
-
-  const handleQuickAddAllergy = (allergy) => {
-    if (!profile.allergies.includes(allergy)) {
-      const updated = [...profile.allergies, allergy];
-      updateProfile({ allergies: updated });
-    }
-  };
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const commonDietPreferences = [
     'Vegetarian',
     'Vegan',
     'Gluten-Free',
-    'Plant-Based',
-    'Mediterranean',
-    'Dairy-Free',
     'Keto',
     'Paleo',
     'Pescatarian',
@@ -88,39 +32,116 @@ const Profile = () => {
     'Shellfish',
     'Soy',
     'Wheat',
-    'Sesame',
   ];
 
-  
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get('/api/profile');
+      setProfile(response.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveDietPreference = (preference) => {
+    // remove the preference from the dietPreferences array
+    const updated = profile.dietPreferences.filter((p) => p !== preference); // keep the preference if it is not equal to the preference to be removed
+
+    // update the profile
+    updateProfile({ dietPreferences: updated });
+  };
+
+  const handleRemoveAllergy = (allergy) => {
+    // remove the allergy from the allergies array
+    const updated = profile.allergies.filter((a) => a !== allergy);
+    // update the profile
+    updateProfile({ allergies: updated });
+  };
+
+  const handleQuickAddDiet = (preference) => {
+    if (!profile.dietPreferences.includes(preference)) {
+      // add the preference to the dietPreferences array
+      const updated = [...profile.dietPreferences, preference];
+      // update the profile
+      updateProfile({ dietPreferences: updated });
+    }
+  };
+
+  const handleQuickAddAllergy = (allergy) => {
+    if (!profile.allergies.includes(allergy)) {
+      const updated = [...profile.allergies, allergy];
+      updateProfile({ allergies: updated });
+    }
+  };
+
+  const updateProfile = async (updates) => {
+    try {
+      const response = await axios.put('/api/profile', updates);
+      setProfile(response.data);
+      setMessage('Profile updated successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setMessage('Error updating profile');
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
+
+  if (loading) {
+    return <div className="container">Loading...</div>;
+  }
+
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <div className="personal-info-section">
-          <h3 className="section-title">Personal Information</h3>
-          <div className="info-grid">
+    <div className="container" style={{ maxWidth: '800px', marginTop: '30px' }}>
+      <div className="card">
+        <div style={{ marginBottom: '30px', borderBottom: '1px solid #eee', paddingBottom: '20px' }}>
+          <h3 style={{ color: '#333', marginBottom: '15px' }}>Personal Information</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <div>
-              <p className="info-label">Full Name</p>
-              <p className="info-value">{profile.firstName} {profile.lastName}</p>
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '5px' }}>Full Name</p>
+              <p style={{ fontSize: '16px', fontWeight: '500' }}>{profile.firstName} {profile.lastName}</p>
             </div>
             <div>
-              <p className="info-label">Email Address</p>
-              <p className="info-value">{profile.email}</p>
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '5px' }}>Email Address</p>
+              <p style={{ fontSize: '16px', fontWeight: '500' }}>{profile.email}</p>
             </div>
           </div>
         </div>
 
-        <div className="preferences-section">
-          <h3 className="section-subtitle">Diet Preferences</h3>
-          <p className="section-description">
+        <h2>Dietary Requirements</h2>
+        {message && (
+          <div className={message.includes('Error') ? 'error-message' : 'success-message'}>
+            {message}
+          </div>
+        )}
+
+        {/* Diet Preferences Section */}
+        <div style={{ marginBottom: '40px' }}>
+          <h3>Diet Preferences</h3>
+          <p style={{ color: '#666', fontSize: '14px', marginBottom: '15px' }}>
             Quickly add your dietary preferences by clicking the options below.
           </p>
 
-          <div className="quick-add-buttons">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
             {commonDietPreferences.map((pref) => (
               <button
                 key={pref}
                 onClick={() => handleQuickAddDiet(pref)}
-                className={`quick-add-btn'+ ${profile.dietPreferences.includes(pref) ? 'diet-selected' : ''}`}
+                className="btn btn-secondary"
+                style={{
+                  fontSize: '14px',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  backgroundColor: profile.dietPreferences.includes(pref) ? '#e3f2fd' : '',
+                  borderColor: profile.dietPreferences.includes(pref) ? '#2196f3' : '',
+                  color: profile.dietPreferences.includes(pref) ? '#1976d2' : ''
+                }}
                 disabled={profile.dietPreferences.includes(pref)}
               >
                 {pref}
@@ -128,34 +149,69 @@ const Profile = () => {
             ))}
           </div>
 
-          <div className="selected-tags">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
             {profile.dietPreferences.map((pref) => (
-              <span key={pref} className="tag diet-tag">
+              <span
+                key={pref}
+                style={{
+                  background: '#e3f2fd',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  border: '1px solid #bbdefb',
+                  color: '#1976d2',
+                  fontWeight: '500'
+                }}
+              >
                 {pref}
                 <button
                   onClick={() => handleRemoveDietPreference(pref)}
-                  className="remove-btn"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#f44336',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
+                    lineHeight: '1'
+                  }}
                   title="Remove"
                 >
-                  x
+                  ×
                 </button>
               </span>
             ))}
           </div>
         </div>
 
-        <div className="allergies-section">
-          <h3 className="section-subtitle">Allergies</h3>
-          <p className="section-description">
-            Select any common allergies you have
+        {/* Allergies Section */}
+        <div>
+          <h3>Allergies</h3>
+          <p style={{ color: '#666', fontSize: '14px', marginBottom: '15px' }}>
+            Select any common allergies you have.
           </p>
 
-          <div className="quick-add-buttons">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
             {commonAllergies.map((allergy) => (
               <button
                 key={allergy}
                 onClick={() => handleQuickAddAllergy(allergy)}
-                className={`quick-add-btn ${profile.allergies.includes(allergy) ? 'allergy-selected' : ''}`}
+                className="btn btn-secondary"
+                style={{
+                  fontSize: '14px',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  // if the allergy is selected, change the background color to red
+                  backgroundColor: profile.allergies.includes(allergy) ? '#ffebee' : '',
+                  borderColor: profile.allergies.includes(allergy) ? '#ef5350' : '',
+                  color: profile.allergies.includes(allergy) ? '#c62828' : ''
+                }}
+                // if the allergy is selected, disable the button
                 disabled={profile.allergies.includes(allergy)}
               >
                 {allergy}
@@ -163,16 +219,40 @@ const Profile = () => {
             ))}
           </div>
 
-          <div className="selected-tags">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
             {profile.allergies.map((allergy) => (
-              <span key={allergy} className="tag allergy-tag">
+              <span
+                key={allergy}
+                style={{
+                  background: '#ffebee',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  border: '1px solid #ffcdd2',
+                  color: '#c62828',
+                  fontWeight: '500'
+                }}
+              >
                 {allergy}
                 <button
                   onClick={() => handleRemoveAllergy(allergy)}
-                  className="remove-btn"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#d32f2f',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
+                    lineHeight: '1'
+                  }}
                   title="Remove"
                 >
-                  x
+                  ×
                 </button>
               </span>
             ))}
@@ -181,10 +261,7 @@ const Profile = () => {
       </div>
     </div>
   );
-
-
-
-
 };
 
 export default Profile;
+

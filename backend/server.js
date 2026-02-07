@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const morgan = require('morgan');
 
-const initDatabase = require('./config/dbinit');
+const initDatabase = require('./config/dbInit');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 
@@ -10,12 +11,17 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+app.use(morgan('dev'));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+// Initialize database on startup
+initDatabase().catch(console.error);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -32,14 +38,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Initialize database then start server
-initDatabase()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('Failed to initialize database:', err);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
