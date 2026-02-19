@@ -33,7 +33,7 @@ const initializeDatabase = async () => {
     cost DECIMAL(10, 2),
     difficulty VARCHAR(50),
     dietary_tags TEXT[],
-    image_url TEXT,
+    is_public BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
