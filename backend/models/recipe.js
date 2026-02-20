@@ -11,7 +11,7 @@ const Recipe = {
     );
     return result.rows[0];
   },
-  
+
    findAll: async (filters = {}) => {
     let query = 'SELECT * FROM recipes WHERE 1=1';
     const params = [];
@@ -59,6 +59,18 @@ const Recipe = {
     query += ' ORDER BY created_at DESC';
     const result = await pool.query(query, params);
     return result.rows;
+  }, 
+
+   update: async (id, userId, recipeData) => {
+    const { title, ingredients, prepTime, prepSteps, cost, difficulty, dietaryTags, isPublic } = recipeData;
+    const result = await pool.query(
+      `UPDATE recipes 
+       SET title = $1, ingredients = $2, prep_time = $3, prep_steps = $4, cost = $5, difficulty = $6, dietary_tags = $7, is_public = $8, updated_at = CURRENT_TIMESTAMP
+       WHERE id = $9 AND user_id = $10
+       RETURNING *`,
+      [title, ingredients, prepTime, prepSteps, cost, difficulty, dietaryTags, isPublic !== undefined ? isPublic : true, id, userId]
+    );
+    return result.rows[0];
   }
 
 };
