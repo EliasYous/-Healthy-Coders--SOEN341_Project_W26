@@ -71,6 +71,11 @@ const Recipe = {
       [title, ingredients, prepTime, prepSteps, cost, difficulty, dietaryTags, isPublic !== undefined ? isPublic : true, id, userId]
     );
     return result.rows[0];
+  },
+
+   delete: async (id, userId) => {
+    const result = await pool.query('DELETE FROM recipes WHERE id = $1 AND user_id = $2 RETURNING id', [id, userId]);
+    return result.rows.length > 0;
   }
 
 };
