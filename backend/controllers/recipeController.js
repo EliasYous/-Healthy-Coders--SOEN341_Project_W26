@@ -33,6 +33,19 @@ const recipeController = {
       res.status(500).json({ error: 'Failed to fetch recipes' });
     }
   },
+
+  updateRecipe: async (req, res) => {
+    try {
+      const recipe = await Recipe.update(req.params.id, req.user.userId, req.body);
+      if (!recipe) {
+        return res.status(404).json({ error: 'Recipe not found or unauthorized' });
+      }
+      res.json(recipe);
+    } catch (error) {
+      console.error('Error updating recipe:', error);
+      res.status(500).json({ error: 'Failed to update recipe' });
+    }
+  },
 };
 
 module.exports = recipeController;
