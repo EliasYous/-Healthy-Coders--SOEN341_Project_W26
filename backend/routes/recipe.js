@@ -13,4 +13,7 @@ router.get('/', authenticateUser, recipeController.getAllRecipes);
 // Update a recipe
 router.put('/:id', authenticateUser, recipeController.updateRecipe);
 
+// Delete a recipe
+router.delete('/:id', authenticateUser, recipeController.deleteRecipe);
+
 module.exports = router;
