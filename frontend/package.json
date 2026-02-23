@@ -8,6 +8,7 @@
     "start": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test": "echo \"No frontend tests specified yet\"",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "echo \"Linting backend...\"",
+    "test": "echo \"No tests specified yet\""
   },
   "keywords": [],
   "author": "",
