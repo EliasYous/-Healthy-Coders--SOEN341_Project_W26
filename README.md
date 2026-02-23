@@ -74,4 +74,4 @@ Secrets and other configuration values are managed through environment variables
 ### Database
 
 **Table Initialization:**
-The backend is configured to automatically initialize the database schema on startup using `backend/config/dbInit.js`. This creates the `users` and `user_profiles` tables if they do not exist.
+The backend is configured to automatically initialize the database schema on startup using `backend/config/dbInit.js`. This creates the `users`, `user_profiles` and `recipes` tables if they do not exist.
