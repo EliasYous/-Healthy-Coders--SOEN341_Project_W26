@@ -33,7 +33,28 @@ const Recipes = () => {
 
   const currentUser = JSON.parse(localStorage.getItem('user')) || {};
 
- 
+  const fetchRecipes = useCallback(async () => {
+    setLoading(true);
+    try {
+      const queryParams = new URLSearchParams({
+        search,
+        ...filters
+      }).toString();
+      const response = await axios.get(`/api/recipes?${queryParams}`);
+      setRecipes(response.data);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [search, filters]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchRecipes();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [fetchRecipes]);
 
  const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,9 +93,14 @@ const Recipes = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
 
 
-
+ 
+  
 
 };
 
