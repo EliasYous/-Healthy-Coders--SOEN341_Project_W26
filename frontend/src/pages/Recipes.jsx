@@ -79,7 +79,6 @@ const Recipes = () => {
         await axios.post('/api/recipes', data);
         alert('Recipe created successfully!');
       }
-      
       // Close modal and reset all states
       setShowModal(false);
       setEditingRecipe(null);
@@ -142,6 +141,19 @@ const Recipes = () => {
     setShowModal(true); // Open the modal in read-only mode
   };
   
+  // Delete a recipe with confirmation
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this recipe?')) {
+      try {
+        await axios.delete(`/api/recipes/${id}`);
+        fetchRecipes(); // Refresh the recipes list to show updated data
+      } catch (error) {
+        console.error('Error deleting recipe:', error);
+        alert('Failed to delete recipe. Please try again.');
+      }
+    }
+  };
+
  return (
     <div className="recipes-page">
       <header className="recipes-header">
@@ -238,6 +250,7 @@ const Recipes = () => {
                   {recipe.user_id === currentUser.id && (
                     <>
                       <button className="btn btn-outline" onClick={() => handleEdit(recipe)}>Edit</button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(recipe.id)}>Delete</button>
                     </>
                   )}
                 </div>
