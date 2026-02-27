@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUser, isAuthenticated, logout, setUser } from '../utils/auth';
-import './Navbar.css';
+import './NavBar.css';
 
 const Navbar = () => {
 
