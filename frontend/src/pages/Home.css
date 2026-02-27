@@ -3,10 +3,15 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #5FA777 0%, #5FA777 100%);
+  background: linear-gradient(135deg, rgba(44, 77, 55, 0.4) 0%, rgba(43, 77, 55, 0.4) 100%), 
+              url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
-  padding: 80px 0;
+  padding: 150px 0;
   text-align: center;
+  min-height: 500px;
 }
 
 .hero h1 {

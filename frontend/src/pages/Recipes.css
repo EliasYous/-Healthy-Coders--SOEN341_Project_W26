@@ -1,0 +1,366 @@
+.recipes-page {
+    position: relative;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  .recipes-page::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), 
+                url('../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
+  
+  .recipes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .recipes-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+  
+  .search-filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-filter-section .form-group {
+    margin-bottom: 0;
+  }
+  
+  @media (min-width: 1200px) {
+    .search-filter-section {
+      flex-direction: row;
+      align-items: center;
+    }
+    
+    .search-bar {
+      flex: 2;
+    }
+    
+    .filters-grid {
+      flex: 3;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .search-filter-section.card {
+    margin-top: 0;
+    padding: 1.5rem;
+  }
+  
+  .recipe-card.card {
+    margin: 0;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: white;
+  }
+  
+  .recipe-card.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recipe-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recipe-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-weight: 500;
+  }
+  
+  .private-tag {
+    background: #ffebee !important;
+    color: #c62828 !important;
+  }
+  
+  .recipe-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .recipe-info {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .recipe-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
+  
+  /* Modal Styles - Overriding to match app style */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+  }
+  
+  .modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .modal-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .checkbox-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem;
+    color: #666;
+  }
+  
+  .btn-outline {
+    background: white;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .btn-outline:hover {
+    background: #f5f5f5;
+  }
+
+  /* Notification Toast */
+  .notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 1rem;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideDown 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    max-width: 400px;
+    min-width: 300px;
+  }
+
+  .notification.success {
+    background-color: #def0df;
+    color: black;
+  }
+
+  .notification.error {
+    background-color: #f44336;
+    color: white;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateX(-50%) translateY(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .notification {
+      top: 10px;
+      left: 50%;
+      max-width: calc(100% - 20px);
+      min-width: 280px;
+    }
+  }
+
+  /* Delete Confirmation Dialog */
+  .confirm-dialog {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: scaleIn 0.2s ease-out;
+  }
+
+  .confirm-dialog h3 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+  }
+
+  .confirm-dialog p {
+    margin: 0 0 1.5rem 0;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .confirm-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .confirm-actions .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .confirm-actions .btn-outline {
+    background: white;
+    border: 2px solid #ddd;
+    color: #333;
+  }
+
+  .confirm-actions .btn-outline:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+  }
+
+  .confirm-actions .btn-danger {
+    background-color: #f44336;
+    color: white;
+  }
+
+  .confirm-actions .btn-danger:hover {
+    background-color: #da190b;
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .recipes-page {
+      padding: 1rem;
+    }
+
+    .recipes-page::before {
+      background-attachment: scroll;
+    }
+
+    .confirm-dialog {
+      padding: 1.5rem;
+    }
+
+    .confirm-actions {
+      flex-direction: column;
+    }
+
+    .confirm-actions .btn {
+      width: 100%;
+    }
+  }
+  

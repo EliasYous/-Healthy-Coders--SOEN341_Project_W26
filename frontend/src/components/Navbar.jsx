@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUser, isAuthenticated, logout, setUser } from '../utils/auth';
-import './Navbar.css';
+import './NavBar.css';
 
 const Navbar = () => {
 
@@ -30,6 +30,10 @@ const Navbar = () => {
       <>
         <Link to="/profile" className="navbar-link">
           Profile
+        </Link>
+        {/* Link to recipes page */}
+        <Link to="/recipes" className="navbar-link">
+          Recipes
         </Link>
           <span className="navbar-user">Hello, {getUser().firstName}!</span>
           <button onClick={handleLogout} className="btn btn-secondary">
