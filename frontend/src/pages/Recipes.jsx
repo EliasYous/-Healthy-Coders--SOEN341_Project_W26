@@ -5,7 +5,6 @@ import './Recipes.css';
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [showModal, setShowModal] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null); //for editing/viewing
   const [viewingRecipe, setViewingRecipe] = useState(null);
@@ -66,6 +65,7 @@ const Recipes = () => {
       prepTime: parseInt(formData.prepTime),
       cost: parseFloat(formData.cost)
     };
+    
     try {
       await axios.post('/api/recipes', data); //can put if else axios.put if editing recipe
       setShowModal(false);
@@ -157,8 +157,52 @@ const Recipes = () => {
         </div>
       </section>
 
+{/* Display Recipes Section */}
+      
+      {/* Loading State - Shows while fetching recipes from the API */}
+      {loading ? (
+        <div className="empty-state">Loading your delicious recipes...</div>
+      
+      /* Success State - Shows when recipes are successfully loaded and array is not empty */
+      ) : recipes.length > 0 ? (
+        <div className="recipes-grid">
+          {/* Map through each recipe and create a card for it with unique key */}
+          {recipes.map(recipe => (
+            <div key={recipe.id} className="recipe-card card">
+              <div className="recipe-content">
+                
+                {/* Display tags for difficulty, privacy, and dietary restrictions */}
+                <div className="recipe-tags">
+                  <span className="tag">{recipe.difficulty}</span>
+                  {/* Show "Private" badge only if recipe is not public */}
+                  {!recipe.is_public && <span className="tag private-tag">Private</span>}
+                  {recipe.dietary_tags?.map(tag => (
+                    <span key={tag} className="tag">{tag}</span>
+                  ))}
+                </div>
+                <h3>{recipe.title}</h3>
+                
+                {/* Quick info section: Prep time and cost with emoji icons */}
+                <div className="recipe-info">
+                  <span>⏱️ {recipe.prep_time} mins</span>
+                  <span>💰 ${recipe.cost}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      
+      /* Empty State - Shows when no recipes match the search/filter criteria */
+      ) : (
+        <div className="empty-state">
+          <h3>No recipes found</h3>
+          <p>Try adjusting your filters or create your first recipe!</p>
+        </div>
+      )}
 
- {showModal && (
+
+  {/* Modal for Creating/Editing/Viewing Recipes */}
+  {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>
