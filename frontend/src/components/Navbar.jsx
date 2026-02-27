@@ -31,6 +31,10 @@ const Navbar = () => {
         <Link to="/profile" className="navbar-link">
           Profile
         </Link>
+        {/* Link to recipes page */}
+        <Link to="/recipes" className="navbar-link">
+          Recipes
+        </Link>
           <span className="navbar-user">Hello, {getUser().firstName}!</span>
           <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
