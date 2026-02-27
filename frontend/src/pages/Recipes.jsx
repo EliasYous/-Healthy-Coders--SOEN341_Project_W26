@@ -5,8 +5,9 @@ import './Recipes.css';
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [editingRecipe, setEditingRecipe] = useState(null); //for editing/viewing
+  const [editingRecipe, setEditingRecipe] = useState(null);
   const [viewingRecipe, setViewingRecipe] = useState(null);
   
   // Search and Filter states
@@ -55,8 +56,10 @@ const Recipes = () => {
     return () => clearTimeout(timer);
   }, [fetchRecipes]);
 
- const handleSubmit = async (e) => {
+  // Handle form submission for both creating and updating recipes
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
     const data = {
       ...formData,
       ingredients: formData.ingredients.split(',').map(i => i.trim()),
@@ -66,15 +69,34 @@ const Recipes = () => {
       cost: parseFloat(formData.cost)
     };
     
+    // Send PUT request to update existing recipe or POST request to create new recipe
     try {
-      await axios.post('/api/recipes', data); //can put if else axios.put if editing recipe
+      if (editingRecipe) {
+        await axios.put(`/api/recipes/${editingRecipe.id}`, data);
+        alert('Recipe updated successfully!');
+      } else {
+        // CREATE: Create new recipe
+        await axios.post('/api/recipes', data);
+        alert('Recipe created successfully!');
+      }
+      
+      // Close modal and reset all states
       setShowModal(false);
-      fetchRecipes();
+      setEditingRecipe(null);
+      setViewingRecipe(null);
+      resetForm();
+      fetchRecipes(); // Refresh the recipes list to show updated data
+
     } catch (error) {
       console.error('Error saving recipe:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
+      alert(`Failed to ${editingRecipe ? 'update' : 'create'} recipe: ${errorMessage}`);
+    } finally {
+      setSaving(false);
     }
   };
 
+  // Reset the form to clear all input fields
   const resetForm = () => {
     setFormData({
       title: '',
@@ -98,12 +120,34 @@ const Recipes = () => {
     setFilters({ ...filters, [name]: value });
   };
 
+  // Edit a recipe - populate form with existing data
+  const handleEdit = (recipe) => {
+    setEditingRecipe(recipe);
+    setFormData({
+      title: recipe.title,
+      ingredients: recipe.ingredients.join(', '),
+      prepTime: recipe.prep_time,
+      prepSteps: recipe.prep_steps.join('\n'),
+      cost: recipe.cost,
+      difficulty: recipe.difficulty,
+      dietaryTags: recipe.dietary_tags ? recipe.dietary_tags.join(', ') : '',
+      isPublic: recipe.is_public ?? true
+    });
+    setShowModal(true); // Open the modal in edit mode
+  };
 
+  // View a recipe - display details in read-only mode
+  const handleView = (recipe) => {
+    setViewingRecipe(recipe);
+    setShowModal(true); // Open the modal in read-only mode
+  };
+  
  return (
     <div className="recipes-page">
       <header className="recipes-header">
         <h2 className="recipes-title">Recipes</h2>
-        <button className="btn btn-primary" onClick={() => { resetForm(); setEditingRecipe(null); setShowModal(true); }}>
+        {/* Action button for creating a new recipe */}
+        <button className="btn btn-primary" onClick={() => { resetForm(); setViewingRecipe(null); setEditingRecipe(null); setShowModal(true); }}>
           + Create Recipe
         </button>
       </header>
@@ -186,6 +230,16 @@ const Recipes = () => {
                 <div className="recipe-info">
                   <span>⏱️ {recipe.prep_time} mins</span>
                   <span>💰 ${recipe.cost}</span>
+                </div>
+                
+                {/* Action buttons for viewing and editing recipes */}
+                <div className="recipe-actions">
+                  <button className="btn btn-outline" onClick={() => handleView(recipe)}>View</button>
+                  {recipe.user_id === currentUser.id && (
+                    <>
+                      <button className="btn btn-outline" onClick={() => handleEdit(recipe)}>Edit</button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -307,13 +361,28 @@ const Recipes = () => {
                 </div>
               )}
 
+              {/* Action buttons for closing the modal and submitting the form */}
               <div className="recipe-actions">
-                <button type="button" className="btn btn-outline" onClick={() => { setShowModal(false); setViewingRecipe(null); }}>
+                <button 
+                  type="button" 
+                  className="btn btn-outline" 
+                  onClick={() => { 
+                    setShowModal(false); 
+                    setViewingRecipe(null); 
+                    setEditingRecipe(null);
+                    resetForm();
+                  }}
+                  disabled={saving}
+                >
                   {viewingRecipe ? 'Close' : 'Cancel'}
                 </button>
                 {!viewingRecipe && (
-                  <button type="submit" className="btn btn-primary">
-                    {editingRecipe ? 'Update' : 'Create'}
+                  <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    disabled={saving}
+                  >
+                    {saving ? 'Saving...' : editingRecipe ? 'Update' : 'Create'}
                   </button>
                 )}
               </div>
