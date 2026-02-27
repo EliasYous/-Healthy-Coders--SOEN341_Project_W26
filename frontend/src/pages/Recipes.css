@@ -1,0 +1,206 @@
+.recipes-page {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+  }
+  
+  .recipes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .recipes-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+  
+  .search-filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-filter-section .form-group {
+    margin-bottom: 0;
+  }
+  
+  @media (min-width: 1200px) {
+    .search-filter-section {
+      flex-direction: row;
+      align-items: center;
+    }
+    
+    .search-bar {
+      flex: 2;
+    }
+    
+    .filters-grid {
+      flex: 3;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .search-filter-section.card {
+    margin-top: 0;
+    padding: 1.5rem;
+  }
+  
+  .recipe-card.card {
+    margin: 0;
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background: white;
+  }
+  
+  .recipe-card.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recipe-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recipe-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background: #e3f2fd;
+    color: #1976d2;
+    font-weight: 500;
+  }
+  
+  .private-tag {
+    background: #ffebee !important;
+    color: #c62828 !important;
+  }
+  
+  .recipe-card h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .recipe-info {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .recipe-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
+  
+  /* Modal Styles - Overriding to match app style */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+  }
+  
+  .modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .modal-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .checkbox-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem;
+    color: #666;
+  }
+  
+  .btn-outline {
+    background: white;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .btn-outline:hover {
+    background: #f5f5f5;
+  }
+  
