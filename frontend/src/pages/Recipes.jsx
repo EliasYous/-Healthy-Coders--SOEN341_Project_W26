@@ -10,6 +10,9 @@ const Recipes = () => {
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [viewingRecipe, setViewingRecipe] = useState(null);
   
+  // Notification state
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  
   // Search and Filter states
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({
@@ -32,6 +35,14 @@ const Recipes = () => {
   });
 
   const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+
+  // Show notification function
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
+  };
 
   const fetchRecipes = useCallback(async () => {
     setLoading(true);
@@ -73,11 +84,11 @@ const Recipes = () => {
     try {
       if (editingRecipe) {
         await axios.put(`/api/recipes/${editingRecipe.id}`, data);
-        alert('Recipe updated successfully!');
+        showNotification('Recipe updated successfully!', 'success');
       } else {
         // CREATE: Create new recipe
         await axios.post('/api/recipes', data);
-        alert('Recipe created successfully!');
+        showNotification('Recipe created successfully!', 'success');
       }
       // Close modal and reset all states
       setShowModal(false);
@@ -89,7 +100,7 @@ const Recipes = () => {
     } catch (error) {
       console.error('Error saving recipe:', error);
       const errorMessage = error.response?.data?.error || error.message || 'Unknown error occurred';
-      alert(`Failed to ${editingRecipe ? 'update' : 'create'} recipe: ${errorMessage}`);
+      showNotification(`Failed to ${editingRecipe ? 'update' : 'create'} recipe: ${errorMessage}`, 'error');
     } finally {
       setSaving(false);
     }
@@ -146,16 +157,24 @@ const Recipes = () => {
     if (window.confirm('Are you sure you want to delete this recipe?')) {
       try {
         await axios.delete(`/api/recipes/${id}`);
+        showNotification('Recipe deleted successfully!', 'success');
         fetchRecipes(); // Refresh the recipes list to show updated data
       } catch (error) {
         console.error('Error deleting recipe:', error);
-        alert('Failed to delete recipe. Please try again.');
+        showNotification('Failed to delete recipe. Please try again.', 'error');
       }
     }
   };
 
  return (
     <div className="recipes-page">
+      {/* Notification Toast */}
+      {notification.show && (
+        <div className={`notification ${notification.type}`}>
+          <span>{notification.message}</span>
+        </div>
+      )}
+      
       <header className="recipes-header">
         <h2 className="recipes-title">Recipes</h2>
         {/* Action button for creating a new recipe */}
