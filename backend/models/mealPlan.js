@@ -13,6 +13,27 @@ class MealPlan {
     const { rows } = await pool.query(query, values);
     return rows[0];
   }
+
+   static async findAll({ userId, weekStartDate }) {
+    let query = `
+      SELECT mp.*, r.title as recipe_title, r.ingredients as recipe_ingredients 
+      FROM meal_plans mp
+      LEFT JOIN recipes r ON mp.recipe_id = r.id
+      WHERE mp.user_id = $1
+    `;
+    const values = [userId];
+    let paramIndex = 2;
+
+    if (weekStartDate) {
+      query += ` AND mp.week_start_date = $${paramIndex}`;
+      values.push(weekStartDate);
+      paramIndex++;
+    }
+
+    const { rows } = await pool.query(query, values);
+    return rows;
+  }
+
 }
 
 module.exports = MealPlan;
