@@ -61,3 +61,16 @@ import axios from 'axios';
       setErrorMsg('Failed to save meal plan.');
     }
   };
+
+
+    const handleRemove = async () => {
+     if (!selectedSlot.existingPlanId) return;
+     try {
+       await axios.delete(`/api/meal-plans/${selectedSlot.existingPlanId}`);
+       setShowModal(false);
+       fetchMealPlans();
+     } catch (err) {
+       console.error(err);
+       setErrorMsg('Failed to delete meal plan');
+     }
+  };
