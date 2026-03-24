@@ -2,6 +2,33 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 
+  const fetchMealPlans = useCallback(async () => { //task 51
+    try {
+      setLoading(true);
+      const res = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
+      setMealPlans(res.data);
+    } catch (error) {
+      console.error('Failed to fetch meal plans', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [weekStartDateString]);
+
+  const fetchRecipes = async () => {
+    try {
+      const res = await axios.get(`/api/recipes`);
+      setRecipes(res.data);
+    } catch (error) {
+      console.error('Failed to fetch recipes', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMealPlans();
+    fetchRecipes();
+  }, [fetchMealPlans]);
+
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (!selectedRecipeId) {
@@ -28,6 +55,7 @@ import axios from 'axios';
          weekStartDate: weekStartDateString
       });
       setShowModal(false);
+      fetchMealPlans();
     } catch (error) {
       console.error('Saving meal plan failed', error);
       setErrorMsg('Failed to save meal plan.');
