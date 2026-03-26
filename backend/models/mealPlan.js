@@ -13,6 +13,25 @@ class MealPlan {
     const { rows } = await pool.query(query, values);
     return rows[0];
   }
+
+  static async getByWeek({ userId, weekStartDate }) {
+    let query = `
+      SELECT mp.*, r.title AS recipe_title, r.ingredients AS recipe_ingredients
+      FROM meal_plans mp
+      JOIN recipes r ON mp.recipe_id = r.id
+      WHERE mp.user_id = $1
+    `;
+    const values = [userId];
+
+    if (weekStartDate) {
+      query += ` AND mp.week_start_date = $2`;
+      values.push(weekStartDate);
+    }
+
+    query += ` ORDER BY mp.day_of_week, mp.meal_type`;
+    const { rows } = await pool.query(query, values);
+    return rows;
+  }
 }
 
 module.exports = MealPlan;
