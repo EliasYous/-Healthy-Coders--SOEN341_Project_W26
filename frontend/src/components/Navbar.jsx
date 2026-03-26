@@ -35,6 +35,9 @@ const Navbar = () => {
         <Link to="/recipes" className="navbar-link">
           Recipes
         </Link>
+        <Link to="/meal-planner" className="navbar-link">
+          Meal Planner
+        </Link>
           <span className="navbar-user">Hello, {getUser().firstName}!</span>
           <button onClick={handleLogout} className="btn btn-secondary">
                 Logout
