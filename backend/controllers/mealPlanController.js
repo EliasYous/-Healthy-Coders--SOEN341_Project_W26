@@ -28,6 +28,19 @@ const mealPlanController = {
       console.error('Error fetching meal plans:', error);
       res.status(500).json({ error: 'Failed to fetch meal plans' });
     }
+  },
+
+  deleteMealPlan: async (req, res) => {
+    try {
+      const success = await MealPlan.delete(req.params.id, req.user.userId);
+      if (!success) {
+        return res.status(404).json({ error: 'Meal plan not found or unauthorized' });
+      }
+      res.json({ message: 'Meal plan deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting meal plan:', error);
+      res.status(500).json({ error: 'Failed to delete meal plan' });
+    }
   }
 };
 

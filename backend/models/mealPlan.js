@@ -32,6 +32,12 @@ class MealPlan {
     const { rows } = await pool.query(query, values);
     return rows;
   }
+
+  static async delete(id, userId) {
+    const query = 'DELETE FROM meal_plans WHERE id = $1 AND user_id = $2 RETURNING *';
+    const { rows } = await pool.query(query, [id, userId]);
+    return rows.length > 0;
+  }
 }
 
 module.exports = MealPlan;

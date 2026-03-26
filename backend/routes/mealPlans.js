@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get('/', authenticateUser, mealPlanController.getMealPlans);
 router.post('/', authenticateUser, mealPlanController.createMealPlan);
+router.delete('/:id', authenticateUser, mealPlanController.deleteMealPlan);
 
 module.exports = router;
