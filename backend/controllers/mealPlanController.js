@@ -19,9 +19,9 @@ const mealPlanController = {
   getMealPlans: async (req, res) => {
     try {
       const { weekStartDate } = req.query;
-      const mealPlans = await MealPlan.getByWeek({
+      const mealPlans = await MealPlan.findAll({
         userId: req.user.userId,
-        weekStartDate
+        weekStartDate: req.query.weekStartDate
       });
       res.json(mealPlans);
     } catch (error) {

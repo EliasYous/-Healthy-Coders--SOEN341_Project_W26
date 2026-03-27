@@ -7,7 +7,7 @@ const initDatabase = require('./config/dbinit');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 const recipeRoutes = require('./routes/recipe');
-const mealPlanRoutes = require('./routes/mealPlans');
+const mealPlanRoutes = require('./routes/mealPlan');
 
 
 const app = express();

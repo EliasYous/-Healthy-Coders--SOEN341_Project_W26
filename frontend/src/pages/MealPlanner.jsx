@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './MealPlanner.css';
 
-// constants for the meal planner
+// for dipi
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 
-// meal planner component
 const MealPlanner = () => {
   const [mealPlans, setMealPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);
@@ -21,37 +20,11 @@ const MealPlanner = () => {
   };
   
   const [currentWeekTop, setCurrentWeekTop] = useState(() => getTopOfWeek(new Date()));
-  const weekStartDateString = currentWeekTop.toISOString().split('T')[0]; // format the date as YYYY-MM-DD
+  const weekStartDateString = currentWeekTop.toISOString().split('T')[0];
+  //
 
-  const [showModal, setShowModal] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [selectedRecipeId, setSelectedRecipeId] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  
-  // navigation functions
-
-  const previousWeek = () => {
-    const prev = new Date(currentWeekTop);
-    prev.setDate(prev.getDate() - 7);
-    setCurrentWeekTop(prev);
-  }
-
-  const nextWeek = () => {
-    const next = new Date(currentWeekTop);
-    next.setDate(next.getDate() + 7);
-    setCurrentWeekTop(next);
-  }
-  
-  // handles cell click to add a recipe
-  const handleCellClick = (day, type) => {
-    const existing = mealPlans.find(mp => mp.day_of_week === day && mp.meal_type === type);
-    setSelectedSlot({ day, type, existingPlanId: existing ? existing.id : null });
-    setSelectedRecipeId(existing ? existing.recipe_id : '');
-    setErrorMsg('');
-    setShowModal(true);
-  };
-
-  const fetchMealPlans = useCallback(async () => { //task 51
+  // for brian
+  const fetchMealPlans = useCallback(async () => {
     try {
       setLoading(true);
       const res = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
@@ -76,8 +49,37 @@ const MealPlanner = () => {
     fetchMealPlans();
     fetchRecipes();
   }, [fetchMealPlans]);
+  //
 
+// for dipi
+  const [showModal, setShowModal] = useState(false);
+  const [showGroceryModal, setShowGroceryModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
+  const previousWeek = () => {
+    const prev = new Date(currentWeekTop);
+    prev.setDate(prev.getDate() - 7);
+    setCurrentWeekTop(prev);
+  }
+
+  const nextWeek = () => {
+    const next = new Date(currentWeekTop);
+    next.setDate(next.getDate() + 7);
+    setCurrentWeekTop(next);
+  }
+
+  const handleCellClick = (day, type) => {
+    const existing = mealPlans.find(mp => mp.day_of_week === day && mp.meal_type === type);
+    setSelectedSlot({ day, type, existingPlanId: existing ? existing.id : null });
+    setSelectedRecipeId(existing ? existing.recipe_id : '');
+    setErrorMsg('');
+    setShowModal(true);
+  };
+  //
+
+  // for brian
   const handleSave = async (e) => {
     e.preventDefault();
     if (!selectedRecipeId) {
@@ -85,7 +87,7 @@ const MealPlanner = () => {
        return;
     }
 
-    const isDuplicate = mealPlans.some(mp =>  //task 53
+    const isDuplicate = mealPlans.some(mp => 
        String(mp.recipe_id) === String(selectedRecipeId) && 
        (mp.day_of_week !== selectedSlot.day || mp.meal_type !== selectedSlot.type)
     );
@@ -96,8 +98,9 @@ const MealPlanner = () => {
 
     try {
       if (selectedSlot.existingPlanId && !selectedRecipeId) {
+        // user could potentially clear? handled by remove.
       }
-      await axios.post('/api/meal-plans', { //task 50
+      await axios.post('/api/meal-plans', {
          recipeId: selectedRecipeId,
          dayOfWeek: selectedSlot.day,
          mealType: selectedSlot.type,
@@ -110,10 +113,10 @@ const MealPlanner = () => {
       setErrorMsg('Failed to save meal plan.');
     }
   };
-
+  
 
   const handleRemove = async () => {
-    if (!selectedSlot.existingPlanId) return;
+     if (!selectedSlot.existingPlanId) return;
      try {
        await axios.delete(`/api/meal-plans/${selectedSlot.existingPlanId}`);
        setShowModal(false);
@@ -124,7 +127,21 @@ const MealPlanner = () => {
      }
   };
 
-  // Get each cell content
+  //
+
+  // for elias
+  const getGroceryList = () => {
+    const list = new Set();
+    mealPlans.forEach(mp => {
+      if (mp.recipe_ingredients && Array.isArray(mp.recipe_ingredients)) {
+        mp.recipe_ingredients.forEach(ing => list.add(ing));
+      }
+    });
+    return Array.from(list);
+  };
+//
+
+// for dipi
   const getCellContent = (day, type) => {
     const plan = mealPlans.find(mp => mp.day_of_week === day && mp.meal_type === type);
     if (plan) {
@@ -137,19 +154,18 @@ const MealPlanner = () => {
     return <div className="meal-cell empty"><span className="add-icon">+</span></div>;
   };
 
-  // Render the meal planner
   return (
     <div className="meal-planner-page">
       <header className="planner-header">
          <h2>Weekly Meal Planner</h2>
          <div className="week-controls">
+            <button className="btn btn-primary" onClick={() => setShowGroceryModal(true)}>🛒 Grocery List</button>
             <button className="btn btn-secondary" onClick={previousWeek}>&lt; Prev</button>
             <span className="week-label">Week of {weekStartDateString}</span>
             <button className="btn btn-secondary" onClick={nextWeek}>Next &gt;</button>
          </div>
       </header>
       
-      {/* Loading state */}
       {loading ? (
         <div className="empty-state">Loading your meal plan...</div>
       ) : (
@@ -177,13 +193,11 @@ const MealPlanner = () => {
         </div>
       )}
 
-      {/* Modal for assigning/editing a recipe */}
       {showModal && (
          <div className="modal-overlay">
            <div className="modal-content">
               <h2>{selectedSlot.existingPlanId ? 'Edit Meal' : 'Assign Meal'} for {selectedSlot.day} ({selectedSlot.type})</h2>
               {errorMsg && <div className="error-message">{errorMsg}</div>}
-              {/* Form for selecting a recipe */}
               <form onSubmit={handleSave} className="modal-form">
                 <div className="form-group">
                    <label>Select Recipe</label>
@@ -199,8 +213,6 @@ const MealPlanner = () => {
                      ))}
                    </select>
                 </div>
-
-                {/* Action button for closing the modal */}
                 <div className="recipe-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                    {selectedSlot.existingPlanId ? (
                      <button type="button" className="btn btn-danger" onClick={handleRemove}>Remove Meal</button>
@@ -215,6 +227,27 @@ const MealPlanner = () => {
          </div>
       )}
 
+      {showGroceryModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Grocery List for Week of {weekStartDateString}</h2>
+            {getGroceryList().length === 0 ? (
+               <p>Your meal plan is empty. Assign meals to generate a list!</p>
+            ) : (
+               <ul style={{ paddingLeft: '1.5rem', marginBottom: '2rem' }}>
+                 {getGroceryList().map((item, idx) => (
+                    <li key={idx} style={{ marginBottom: '0.5rem', textTransform: 'capitalize' }}>{item}</li>
+                 ))}
+               </ul>
+            )}
+            <div className="recipe-actions">
+              <button className="btn btn-primary" onClick={() => setShowGroceryModal(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      
     </div>
   );
 };
