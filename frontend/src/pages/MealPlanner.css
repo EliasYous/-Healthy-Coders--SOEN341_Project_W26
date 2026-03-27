@@ -1,0 +1,132 @@
+.meal-planner-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+}
+  
+.planner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+  
+.planner-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.week-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+  
+.week-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+  
+.planner-grid {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+  
+.planner-grid table {
+    width: 100%;
+    border-collapse: collapse;
+}
+  
+.planner-grid th,
+.planner-grid td {
+    border: 1px solid #eee;
+    padding: 1rem;
+    text-align: center;
+    width: 12.5%;
+}
+  
+.planner-grid th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    padding: 1.5rem 1rem;
+}
+  
+.planner-grid td {
+    vertical-align: top;
+}
+  
+.meal-type-label {
+    font-weight: 600;
+    background: #f8f9fa;
+    color: #555;
+    vertical-align: middle !important;
+}
+
+.meal-type-label {
+    font-weight: 600;
+    background: #f8f9fa;
+    color: #555;
+    vertical-align: middle !important;
+}
+  
+.meal-cell {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0.5rem;
+}
+
+.meal-cell.empty {
+    background: #fafafa;
+    border: 1px dashed #ccc;
+}
+
+.meal-cell.empty:hover {
+    background: #f0f0f0;
+    border-color: #007bff;
+}
+  
+.meal-cell.empty.add-icon {
+    font-size: 1.5rem;
+    color: #999;
+}
+
+.meal-cell.empty:hover .add-icon {
+    color: #007bff;
+}
+
+.meal-cell.filled {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+}
+
+.meal-cell.filled:hover {
+    background: #bbdefb;
+}
+
+.recipe-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1976d2;
+    word-break: break-word;
+}
+
+.error-message {
+    background: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}

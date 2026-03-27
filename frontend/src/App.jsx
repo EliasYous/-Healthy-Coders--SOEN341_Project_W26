@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Home from './pages/Home';
 import Recipes from './pages/Recipes';
+import MealPlanner from './pages/MealPlanner';
 import './App.css';
 
 function App() {
@@ -31,6 +32,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Recipes />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/meal-planner"
+            element={
+              <PrivateRoute>
+                <MealPlanner />
               </PrivateRoute>
             }
           />
