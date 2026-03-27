@@ -92,17 +92,30 @@
     background: #fafafa;
     border: 1px dashed #ccc;
 }
+
+.meal-cell.empty:hover {
+    background: #f0f0f0;
+    border-color: #007bff;
+}
   
 .meal-cell.empty.add-icon {
     font-size: 1.5rem;
     color: #999;
 }
 
+.meal-cell.empty:hover .add-icon {
+    color: #007bff;
+}
+
 .meal-cell.filled {
     background: #e3f2fd;
     border: 1px solid #bbdefb;
 }
-  
+
+.meal-cell.filled:hover {
+    background: #bbdefb;
+}
+
 .recipe-title {
     font-size: 0.9rem;
     font-weight: 500;

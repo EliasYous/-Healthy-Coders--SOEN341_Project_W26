@@ -9,6 +9,7 @@ const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 // meal planner component
 const MealPlanner = () => {
   const [mealPlans, setMealPlans] = useState([]);
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   
   const getTopOfWeek = (date) => {
@@ -22,6 +23,10 @@ const MealPlanner = () => {
   const [currentWeekTop, setCurrentWeekTop] = useState(() => getTopOfWeek(new Date()));
   const weekStartDateString = currentWeekTop.toISOString().split('T')[0]; // format the date as YYYY-MM-DD
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState('');
+  
   // navigation functions
 
   const previousWeek = () => {
@@ -35,7 +40,14 @@ const MealPlanner = () => {
     next.setDate(next.getDate() + 7);
     setCurrentWeekTop(next);
   }
-
+  
+  // handles cell click to add a recipe
+  const handleCellClick = (day, type) => {
+    const existing = mealPlans.find(mp => mp.day_of_week === day && mp.meal_type === type);
+    setSelectedSlot({ day, type, existingPlanId: existing ? existing.id : null });
+    setSelectedRecipeId(existing ? existing.recipe_id : '');
+    setShowModal(true);
+  };
 
   const fetchMealPlans = useCallback(async () => { //task 51
     try {
@@ -135,6 +147,7 @@ const MealPlanner = () => {
          </div>
       </header>
       
+      {/* Loading state */}
       {loading ? (
         <div className="empty-state">Loading your meal plan...</div>
       ) : (
@@ -151,7 +164,7 @@ const MealPlanner = () => {
                  <tr key={type}>
                    <td className="meal-type-label">{type}</td>
                    {DAYS.map(day => (
-                     <td key={`${day}-${type}`}>
+                     <td key={`${day}-${type}`} onClick={() => handleCellClick(day, type)}>
                        {getCellContent(day, type)}
                      </td>
                    ))}
@@ -160,6 +173,38 @@ const MealPlanner = () => {
              </tbody>
            </table>
         </div>
+      )}
+
+      {/* Modal for assigning/editing a recipe */}
+      {showModal && (
+         <div className="modal-overlay">
+           <div className="modal-content">
+              <h2>{selectedSlot.existingPlanId ? 'Edit Meal' : 'Assign Meal'} for {selectedSlot.day} ({selectedSlot.type})</h2>
+              
+              {/* Form for selecting a recipe */}
+              <form className="modal-form">
+                <div className="form-group">
+                   <label>Select Recipe</label>
+                   <select 
+                      value={selectedRecipeId} 
+                      onChange={(e) => setSelectedRecipeId(e.target.value)}
+                      className="form-control"
+                      style={{ padding: '0.5rem', width: '100%', marginBottom: '1rem' }}
+                   >
+                     <option value="">-- Choose a Recipe --</option>
+                     {recipes.map(r => (
+                        <option key={r.id} value={r.id}>{r.title} ({r.prep_time}m)</option>
+                     ))}
+                   </select>
+                </div>
+
+                {/* Action button for closing the modal */}
+                <div className="recipe-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                  <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                </div>
+              </form>
+           </div>
+         </div>
       )}
 
     </div>
