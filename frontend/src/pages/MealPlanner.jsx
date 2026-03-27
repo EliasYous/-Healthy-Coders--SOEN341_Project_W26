@@ -26,6 +26,7 @@ const MealPlanner = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedRecipeId, setSelectedRecipeId] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   
   // navigation functions
 
@@ -46,6 +47,7 @@ const MealPlanner = () => {
     const existing = mealPlans.find(mp => mp.day_of_week === day && mp.meal_type === type);
     setSelectedSlot({ day, type, existingPlanId: existing ? existing.id : null });
     setSelectedRecipeId(existing ? existing.recipe_id : '');
+    setErrorMsg('');
     setShowModal(true);
   };
 
@@ -180,9 +182,9 @@ const MealPlanner = () => {
          <div className="modal-overlay">
            <div className="modal-content">
               <h2>{selectedSlot.existingPlanId ? 'Edit Meal' : 'Assign Meal'} for {selectedSlot.day} ({selectedSlot.type})</h2>
-              
+              {errorMsg && <div className="error-message">{errorMsg}</div>}
               {/* Form for selecting a recipe */}
-              <form className="modal-form">
+              <form onSubmit={handleSave} className="modal-form">
                 <div className="form-group">
                    <label>Select Recipe</label>
                    <select 
@@ -199,8 +201,11 @@ const MealPlanner = () => {
                 </div>
 
                 {/* Action button for closing the modal */}
-                <div className="recipe-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                  <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                <div className="recipe-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                   <div style={{ display: 'flex', gap: '0.5rem' }}>
+                     <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                     <button type="submit" className="btn btn-primary">Save</button>
+                   </div>
                 </div>
               </form>
            </div>
