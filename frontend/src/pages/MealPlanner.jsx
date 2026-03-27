@@ -202,6 +202,9 @@ const MealPlanner = () => {
 
                 {/* Action button for closing the modal */}
                 <div className="recipe-actions" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                   {selectedSlot.existingPlanId ? (
+                     <button type="button" className="btn btn-danger" onClick={handleRemove}>Remove Meal</button>
+                   ) : <div></div>}
                    <div style={{ display: 'flex', gap: '0.5rem' }}>
                      <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
                      <button type="submit" className="btn btn-primary">Save</button>
