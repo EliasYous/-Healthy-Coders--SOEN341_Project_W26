@@ -11,12 +11,17 @@ describe('Profile Controller', () => {
   let req, res;
 
   beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     req = { user: { userId: 1 }, body: {} };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    console.error.mockRestore();
   });
 
   describe('getProfile', () => {

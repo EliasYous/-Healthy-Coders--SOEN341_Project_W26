@@ -13,12 +13,17 @@ describe('Auth Controller', () => {
   let req, res;
 
   beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     req = { body: {} };
     res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    console.error.mockRestore();
   });
 
   describe('register', () => {
