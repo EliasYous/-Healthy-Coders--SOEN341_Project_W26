@@ -6,7 +6,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "lint": "echo \"Linting backend...\"",
-    "test": "echo \"No tests specified yet\""
+    "test": "jest --detectOpenHandles --forceExit --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +23,9 @@
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "pg": "^8.18.0"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
   }
 }
