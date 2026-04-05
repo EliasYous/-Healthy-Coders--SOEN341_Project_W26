@@ -5,12 +5,17 @@ const Profile = () => {
   const [profile, setProfile] = useState({
     dietPreferences: [],
     allergies: [],
+    pantry: [],
     firstName: '',
     lastName: '',
     email: '',
   });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const [pantryQty, setPantryQty] = useState('');
+  const [pantryUnit, setPantryUnit] = useState('g');
+  const [pantryItemName, setPantryItemName] = useState('');
 
   const commonDietPreferences = [
     'Vegetarian',
@@ -21,6 +26,19 @@ const Profile = () => {
     'Pescatarian',
     'Halal',
     'Low-Carb',
+  ];
+
+  const PANTRY_UNITS = [
+    { value: '', label: 'No unit (whole items)' },
+    { value: 'g', label: 'Grams (g)' },
+    { value: 'kg', label: 'Kilograms (kg)' },
+    { value: 'ml', label: 'Milliliters (ml)' },
+    { value: 'l', label: 'Liters (l)' },
+    { value: 'oz', label: 'Ounces (oz)' },
+    { value: 'lb', label: 'Pounds (lb)' },
+    { value: 'cup', label: 'Cups' },
+    { value: 'tbsp', label: 'Tablespoons' },
+    { value: 'tsp', label: 'Teaspoons' }
   ];
 
   const commonAllergies = [
@@ -79,6 +97,27 @@ const Profile = () => {
       updateProfile({ allergies: updated });
     }
   };
+
+  const handleAddPantryItem = (e) => {
+    e.preventDefault();
+    if (!pantryQty || !pantryItemName.trim()) {
+      setMessage('Error: Quantity and Item Name are required');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+    const itemString = `${pantryQty}${pantryUnit ? ' ' + pantryUnit : ''} ${pantryItemName.trim()}`;
+    const updated = [...(profile.pantry || []), itemString];
+    updateProfile({ pantry: updated });
+    setPantryQty('');
+    setPantryUnit('g');
+    setPantryItemName('');
+  };
+
+  const handleRemovePantryItem = (item) => {
+    const updated = (profile.pantry || []).filter((i) => i !== item);
+    updateProfile({ pantry: updated });
+  };
+
 
   const updateProfile = async (updates) => {
     try {
