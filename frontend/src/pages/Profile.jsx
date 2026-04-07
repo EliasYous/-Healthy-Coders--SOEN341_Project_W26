@@ -229,7 +229,7 @@ const Profile = () => {
         </div>
 
         {/* Allergies Section */}
-        <div>
+        <div style={{ marginBottom: '40px' }}>
           <h3>Allergies</h3>
           <p style={{ color: '#666', fontSize: '14px', marginBottom: '15px' }}>
             Select any common allergies you have.
@@ -283,6 +283,85 @@ const Profile = () => {
                     cursor: 'pointer',
                     fontSize: '18px',
                     color: '#d32f2f',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0',
+                    lineHeight: '1'
+                  }}
+                  title="Remove"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Pantry Section */}
+        <div>
+          <h3>My Pantry</h3>
+          <p style={{ color: '#666', fontSize: '14px', marginBottom: '15px' }}>
+            Add items you already have at home (e.g. "500g sugar", "10 bananas", "salt"). These will be excluded from your grocery list.
+          </p>
+
+          <form onSubmit={handleAddPantryItem} style={{ display: 'flex', gap: '10px', marginBottom: '20px', alignItems: 'center' }}>
+            <input
+              type="number"
+              min="0"
+              step="any"
+              value={pantryQty}
+              onChange={(e) => setPantryQty(e.target.value)}
+              placeholder="Qty (e.g. 200)"
+              className="form-control"
+              style={{ width: '140px', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+            />
+            <select
+              value={pantryUnit}
+              onChange={(e) => setPantryUnit(e.target.value)}
+              className="form-control"
+              style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              {PANTRY_UNITS.map(u => (
+                <option key={u.value} value={u.value}>{u.label}</option>
+              ))}
+            </select>
+            <input
+              type="text"
+              value={pantryItemName}
+              onChange={(e) => setPantryItemName(e.target.value)}
+              placeholder="Item name (e.g. chicken)"
+              className="form-control"
+              style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+            />
+            <button type="submit" className="btn btn-primary" style={{ padding: '10px 20px', whiteSpace: 'nowrap' }}>Add Item</button>
+          </form>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            {(profile.pantry || []).map((item, idx) => (
+              <span
+                key={idx}
+                style={{
+                  background: '#e8f5e9',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  border: '1px solid #c8e6c9',
+                  color: '#2e7d32',
+                  fontWeight: '500'
+                }}
+              >
+                {item}
+                <button
+                  onClick={() => handleRemovePantryItem(item)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    color: '#c62828',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
