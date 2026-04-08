@@ -18,6 +18,7 @@ const initializeDatabase = async () => {
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     diet_preferences TEXT[],
     allergies TEXT[],
+    pantry_ingredients TEXT[] DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id)
