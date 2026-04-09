@@ -45,20 +45,9 @@ const MealPlanner = () => {
     }
   };
 
-    const fetchProfile = async () => {
-    try {
-      const res = await axios.get(`/api/profile`);
-      setProfile(res.data);
-    } catch (error) {
-      console.error('Failed to fetch profile', error);
-    }
-  };
-
   useEffect(() => {
     fetchMealPlans();
     fetchRecipes();
-    fetchProfile();
-
   }, [fetchMealPlans]);
   //
 
