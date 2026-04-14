@@ -10,6 +10,22 @@ const Recipes = () => {
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [viewingRecipe, setViewingRecipe] = useState(null);
   
+const UNITS = [
+    { value: '', label: 'No unit (whole items)' },
+    { value: 'g', label: 'Grams (g)' },
+    { value: 'kg', label: 'Kilograms (kg)' },
+    { value: 'ml', label: 'Milliliters (ml)' },
+    { value: 'l', label: 'Liters (l)' },
+    { value: 'oz', label: 'Ounces (oz)' },
+    { value: 'lb', label: 'Pounds (lb)' },
+    { value: 'cup', label: 'Cups' },
+    { value: 'tbsp', label: 'Tablespoons' },
+    { value: 'tsp', label: 'Teaspoons' }
+  ];
+  const [ingQty, setIngQty] = useState('');
+  const [ingUnit, setIngUnit] = useState('g');
+  const [ingName, setIngName] = useState('');
+
   // Notification state
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
   
@@ -25,7 +41,7 @@ const Recipes = () => {
   // Form state
   const [formData, setFormData] = useState({
     title: '',
-    ingredients: '',
+    ingredients: [],
     prepTime: '',
     prepSteps: '',
     cost: '',
@@ -73,7 +89,6 @@ const Recipes = () => {
     setSaving(true);
     const data = {
       ...formData,
-      ingredients: formData.ingredients.split(',').map(i => i.trim()),
       prepSteps: formData.prepSteps.split('\n').map(s => s.trim()),
       dietaryTags: formData.dietaryTags.split(',').map(t => t.trim()),
       prepTime: parseInt(formData.prepTime),
@@ -110,7 +125,7 @@ const Recipes = () => {
   const resetForm = () => {
     setFormData({
       title: '',
-      ingredients: '',
+      ingredients: [],
       prepTime: '',
       prepSteps: '',
       cost: '',
@@ -118,6 +133,9 @@ const Recipes = () => {
       dietaryTags: '',
       isPublic: true
     });
+    setIngQty('');
+    setIngUnit('g');
+    setIngName('');
   };
 
    const handleInputChange = (e) => {
@@ -135,7 +153,7 @@ const Recipes = () => {
     setEditingRecipe(recipe);
     setFormData({
       title: recipe.title,
-      ingredients: recipe.ingredients.join(', '),
+      ingredients: recipe.ingredients || [],
       prepTime: recipe.prep_time,
       prepSteps: recipe.prep_steps.join('\n'),
       cost: recipe.cost,
@@ -143,6 +161,9 @@ const Recipes = () => {
       dietaryTags: recipe.dietary_tags ? recipe.dietary_tags.join(', ') : '',
       isPublic: recipe.is_public ?? true
     });
+    setIngQty('');
+    setIngUnit('g');
+    setIngName('');
     setShowModal(true); // Open the modal in edit mode
   };
 
@@ -164,6 +185,22 @@ const Recipes = () => {
         showNotification('Failed to delete recipe. Please try again.', 'error');
       }
     }
+  };
+
+  const handleAddIngredient = (e) => {
+    if (e) e.preventDefault();
+    if (!ingQty || !ingName.trim()) return;
+    const itemString = `${ingQty}${ingUnit ? ' ' + ingUnit : ''} ${ingName.trim()}`;
+    setFormData({ ...formData, ingredients: [...formData.ingredients, itemString] });
+    setIngQty('');
+    setIngUnit('g');
+    setIngName('');
+  };
+
+  const handleRemoveIngredient = (idx) => {
+    const newIngs = [...formData.ingredients];
+    newIngs.splice(idx, 1);
+    setFormData({ ...formData, ingredients: newIngs });
   };
 
  return (
@@ -307,14 +344,58 @@ const Recipes = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Ingredients {viewingRecipe ? '' : '(comma separated)'}</label>
-                <textarea 
-                  name="ingredients" 
-                  value={viewingRecipe ? viewingRecipe.ingredients.join(', ') : formData.ingredients} 
-                  onChange={handleInputChange} 
-                  required 
-                  disabled={!!viewingRecipe}
-                />
+                <label>Ingredients</label>
+                {viewingRecipe ? (
+                  <ul style={{ paddingLeft: '20px' }}>
+                    {viewingRecipe.ingredients.map((ing, idx) => <li key={idx}>{ing}</li>)}
+                  </ul>
+                ) : (
+                  <div>
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', alignItems: 'center' }}>
+                      <input
+                        type="number"
+                        min="0"
+                        step="any"
+                        value={ingQty}
+                        onChange={(e) => setIngQty(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddIngredient(); } }}
+                        placeholder="Qty"
+                        className="form-control"
+                        style={{ width: '100px', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+                      />
+                      <select
+                        value={ingUnit}
+                        onChange={(e) => setIngUnit(e.target.value)}
+                        className="form-control"
+                        style={{ width: '120px', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+                      >
+                        {UNITS.map(u => (
+                          <option key={u.value} value={u.value}>{u.label}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        value={ingName}
+                        onChange={(e) => setIngName(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddIngredient(); } }}
+                        placeholder="Item name"
+                        className="form-control"
+                        style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+                      />
+                      <button type="button" onClick={handleAddIngredient} className="btn btn-secondary" style={{ whiteSpace: 'nowrap' }}>Add</button>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {formData.ingredients.map((ing, idx) => (
+                        <span key={idx} style={{
+                          background: '#e3f2fd', padding: '6px 12px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: '#1976d2', border: '1px solid #bbdefb'
+                        }}>
+                          {ing}
+                          <button type="button" onClick={() => handleRemoveIngredient(idx)} style={{ background: 'none', border: 'none', color: '#f44336', cursor: 'pointer', fontSize: '16px', padding: 0 }} title="Remove">×</button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="form-row">
                 <div className="form-group">

@@ -5,7 +5,7 @@ const Profile = {
     // Get user profile with user info
   findByUserId: async (userId) => {
     const result = await pool.query(
-      `SELECT up.diet_preferences, up.allergies, u.first_name, u.last_name, u.email
+      `SELECT up.diet_preferences, up.allergies, up.pantry, u.first_name, u.last_name, u.email
        FROM user_profiles up
        JOIN users u ON up.user_id = u.id
        WHERE up.user_id = $1`,
@@ -24,10 +24,10 @@ const Profile = {
   },
   
   // Create new profile
-  create: async (userId, dietPreferences = [], allergies = []) => {
+  create: async (userId, dietPreferences = [], allergies = [], pantry = []) => {
     const result = await pool.query(
-      'INSERT INTO user_profiles (user_id, diet_preferences, allergies) VALUES ($1, $2, $3) RETURNING *',
-      [userId, dietPreferences, allergies]
+      'INSERT INTO user_profiles (user_id, diet_preferences, allergies, pantry) VALUES ($1, $2, $3, $4) RETURNING *',
+      [userId, dietPreferences, allergies, pantry]
     );
     return result.rows[0];
   },
@@ -46,7 +46,10 @@ const Profile = {
       updateFields.push(`allergies = $${paramCount++}`);
       values.push(updates.allergies);
     }
-
+    if (updates.pantry !== undefined) {
+      updateFields.push(`pantry = $${paramCount++}`);
+      values.push(updates.pantry);
+    }
     if (updateFields.length === 0) {
       return null;
     }
@@ -78,6 +81,7 @@ const Profile = {
     return {
       dietPreferences: profile.diet_preferences || [],
       allergies: profile.allergies || [],
+      pantry: profile.pantry || [],
       firstName: profile.first_name,
       lastName: profile.last_name,
       email: profile.email,

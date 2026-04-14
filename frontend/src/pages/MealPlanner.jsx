@@ -9,6 +9,7 @@ const MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
 const MealPlanner = () => {
   const [mealPlans, setMealPlans] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   
   const getTopOfWeek = (date) => {
@@ -142,13 +143,122 @@ const MealPlanner = () => {
 
   // for elias
   const getGroceryList = () => {
-    const list = new Set();
+    const ingredientMap = new Map();
+
+    const processIngredient = (ing, isPantry = false) => {
+      const str = ing.trim();
+      const regex = /^([\d\.]+)\s*(g|kg|mg|lb|lbs|oz|ml|l|cup|cups|tbsp|tsp|gram|grams|kilogram|kilograms)?\s+(.+)$/i;
+      const match = str.match(regex);
+
+      let qty = 0;
+      let unit = '';
+      let item = str;
+      let parsed = false;
+
+      if (match) {
+        qty = parseFloat(match[1]);
+        unit = match[2] ? match[2].toLowerCase() : '';
+        item = match[3].trim();
+        parsed = true;
+      }
+
+      if (parsed && !isNaN(qty)) {
+        if (unit === 'grams' || unit === 'gram') unit = 'g';
+        if (unit === 'kilograms' || unit === 'kilogram') unit = 'kg';
+        if (unit === 'lbs') unit = 'lb';
+        if (unit === 'cups') unit = 'cup';
+
+        let normalizedItem = item.toLowerCase();
+        if (normalizedItem.endsWith('ies')) {
+          normalizedItem = normalizedItem.slice(0, -3) + 'y';
+        } else if (normalizedItem.endsWith('oes') && normalizedItem.length > 4) {
+          normalizedItem = normalizedItem.slice(0, -2);
+        } else if (normalizedItem.endsWith('s') && !normalizedItem.endsWith('ss') && !normalizedItem.endsWith('us') && !normalizedItem.endsWith('is')) {
+          normalizedItem = normalizedItem.slice(0, -1);
+        }
+
+        const key = `${unit}_${normalizedItem}`;
+
+        if (ingredientMap.has(key)) {
+          if (isPantry) {
+            ingredientMap.get(key).pantryQty = (ingredientMap.get(key).pantryQty || 0) + qty;
+          } else {
+            ingredientMap.get(key).qty += qty;
+          }
+        } else {
+          ingredientMap.set(key, { 
+            qty: isPantry ? 0 : qty, 
+            pantryQty: isPantry ? qty : 0, 
+            unit, 
+            item: normalizedItem, 
+            parsed: true 
+          });
+        }
+      } else {
+        const key = `unparsed_${str.toLowerCase()}`;
+        if (ingredientMap.has(key)) {
+          if (isPantry) {
+            ingredientMap.get(key).inPantry = true;
+          } else {
+            ingredientMap.get(key).needed = true;
+          }
+        } else {
+          ingredientMap.set(key, { 
+            qty: null, 
+            unit: '', 
+            item: str, 
+            parsed: false,
+            inPantry: isPantry,
+            needed: !isPantry
+          });
+        }
+      }
+    };
     mealPlans.forEach(mp => {
       if (mp.recipe_ingredients && Array.isArray(mp.recipe_ingredients)) {
-        mp.recipe_ingredients.forEach(ing => list.add(ing));
+        mp.recipe_ingredients.forEach(ing => processIngredient(ing, false));
       }
     });
-    return Array.from(list);
+    
+     if (profile && profile.pantry && Array.isArray(profile.pantry)) {
+      profile.pantry.forEach(ing => processIngredient(ing, true));
+    }
+
+    const formatPlural = (qty, unit, item) => {
+      if (unit) {
+         let displayUnit = unit;
+         if (qty > 1) {
+            if (unit === 'cup') displayUnit = 'cups';
+            if (unit === 'lb') displayUnit = 'lbs';
+         }
+         const needsSpace = ['g', 'kg', 'mg', 'ml', 'oz'].includes(unit) ? '' : ' ';
+         return `${qty}${needsSpace}${displayUnit} ${item}`;
+      } else {
+         let displayItem = item;
+         if (qty > 1) {
+            if (item.endsWith('y') && !['a','e','i','o','u'].includes(item.charAt(item.length-2))) {
+               displayItem = item.slice(0, -1) + 'ies';
+            } else if (item.endsWith('o') || item.endsWith('s') || item.endsWith('x') || item.endsWith('ch') || item.endsWith('sh')) {
+               displayItem = item + 'es';
+            } else {
+               displayItem = item + 's';
+            }
+         }
+         return `${qty} ${displayItem}`;
+      }
+    };
+
+    return Array.from(ingredientMap.values())
+      .filter(val => {
+        if (!val.parsed) return val.needed && !val.inPantry;
+        return (val.qty - val.pantryQty) > 0;
+      })
+      .map(val => {
+        if (!val.parsed) return val.item;
+        const finalQty = Math.round((val.qty - val.pantryQty) * 100) / 100;
+        return formatPlural(finalQty, val.unit, val.item);
+      });
+      
   };
 //
 
