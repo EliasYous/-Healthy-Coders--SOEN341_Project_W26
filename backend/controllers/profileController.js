@@ -23,10 +23,10 @@ const updateProfile = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { dietPreferences, allergies } = req.body;
+    const { dietPreferences, allergies, pantry } = req.body;
 
     // Update profile
-    await Profile.update(req.user.userId, { dietPreferences, allergies });
+    await Profile.update(req.user.userId, { dietPreferences, allergies, pantry });
 
     // Fetch updated profile
     const profile = await Profile.findByUserId(req.user.userId);
