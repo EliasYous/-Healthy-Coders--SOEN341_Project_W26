@@ -1,5 +1,4 @@
 const { validationResult } = require('express-validator');
-const User = require('../models/user');
 const Profile = require('../models/profile');
 
 // Get user profile

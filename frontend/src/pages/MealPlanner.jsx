@@ -147,7 +147,7 @@ const MealPlanner = () => {
 
     const processIngredient = (ing, isPantry = false) => {
       const str = ing.trim();
-      const regex = /^([\d\.]+)\s*(g|kg|mg|lb|lbs|oz|ml|l|cup|cups|tbsp|tsp|gram|grams|kilogram|kilograms)?\s+(.+)$/i;
+      const regex = /^([\d.]+)\s*(g|kg|mg|lb|lbs|oz|ml|l|cup|cups|tbsp|tsp|gram|grams|kilogram|kilograms)?\s+(.+)$/i;
       const match = str.match(regex);
 
       let qty = 0;
