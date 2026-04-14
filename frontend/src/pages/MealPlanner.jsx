@@ -28,8 +28,8 @@ const MealPlanner = () => {
   const fetchMealPlans = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
-      setMealPlans(response.data);
+      const res = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
+      setMealPlans(res.data);
     } catch (error) {
       console.error('Failed to fetch meal plans', error);
     } finally {
@@ -39,8 +39,8 @@ const MealPlanner = () => {
 
   const fetchRecipes = async () => {
     try {
-      const response = await axios.get(`/api/recipes`);
-      setRecipes(response.data);
+      const res = await axios.get(`/api/recipes`);
+      setRecipes(res.data);
     } catch (error) {
       console.error('Failed to fetch recipes', error);
     }
@@ -48,8 +48,8 @@ const MealPlanner = () => {
 
     const fetchProfile = async () => {
     try {
-      const response = await axios.get(`/api/profile`);
-      setProfile(response.data);
+      const res = await axios.get(`/api/profile`);
+      setProfile(res.data);
     } catch (error) {
       console.error('Failed to fetch profile data from API endpoint', error);
     }
@@ -147,7 +147,7 @@ const MealPlanner = () => {
 
     const processIngredient = (ing, isPantry = false) => {
       const str = ing.trim();
-      const regex = /^([\d.]+)\s*(g|kg|mg|lb|lbs|oz|ml|l|cup|cups|tbsp|tsp|gram|grams|kilogram|kilograms)?\s+(.+)$/i;
+      const regex = /^([\d\.]+)\s*(g|kg|mg|lb|lbs|oz|ml|l|cup|cups|tbsp|tsp|gram|grams|kilogram|kilograms)?\s+(.+)$/i;
       const match = str.match(regex);
 
       let qty = 0;
