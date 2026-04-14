@@ -27,8 +27,8 @@ const MealPlanner = () => {
   const fetchMealPlans = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
-      setMealPlans(res.data);
+      const response = await axios.get(`/api/meal-plans?weekStartDate=${weekStartDateString}`);
+      setMealPlans(response.data);
     } catch (error) {
       console.error('Failed to fetch meal plans', error);
     } finally {
@@ -38,8 +38,8 @@ const MealPlanner = () => {
 
   const fetchRecipes = async () => {
     try {
-      const res = await axios.get(`/api/recipes`);
-      setRecipes(res.data);
+      const response = await axios.get(`/api/recipes`);
+      setRecipes(response.data);
     } catch (error) {
       console.error('Failed to fetch recipes', error);
     }
@@ -47,10 +47,10 @@ const MealPlanner = () => {
 
     const fetchProfile = async () => {
     try {
-      const res = await axios.get(`/api/profile`);
-      setProfile(res.data);
+      const response = await axios.get(`/api/profile`);
+      setProfile(response.data);
     } catch (error) {
-      console.error('Failed to fetch profile', error);
+      console.error('Failed to fetch profile data from API endpoint', error);
     }
   };
 
