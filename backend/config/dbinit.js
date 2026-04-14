@@ -16,8 +16,9 @@ const initializeDatabase = async () => {
   CREATE TABLE IF NOT EXISTS user_profiles (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    diet_preferences TEXT[],
-    allergies TEXT[],
+    diet_preferences TEXT[] DEFAULT '{}',
+    allergies TEXT[] DEFAULT '{}',
+    pantry_ingredients TEXT[] DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id)
