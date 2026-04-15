@@ -53,7 +53,6 @@ const Recipe = {
     if (filters.dietaryTags && filters.dietaryTags.length > 0) {
       query += ` AND dietary_tags && $${paramCount}`;
       params.push(filters.dietaryTags);
-      paramCount++;
     }
 
     query += ' ORDER BY created_at DESC';

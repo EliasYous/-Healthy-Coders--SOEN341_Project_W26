@@ -27,7 +27,6 @@ class MealPlan {
     if (weekStartDate) {
       query += ` AND mp.week_start_date = $${paramIndex}`;
       values.push(weekStartDate);
-      paramIndex++;
     }
 
     const { rows } = await pool.query(query, values);
